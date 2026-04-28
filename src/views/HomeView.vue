@@ -22,6 +22,15 @@
             </div>
           </el-card>
         </el-col>
+        <el-col :xs="24" :sm="12" :md="12">
+          <el-card shadow="hover" class="feature-card" @click.native="$router.push('/classification-history')">
+            <div class="feature-content">
+              <i class="el-icon-time" style="font-size: 48px; color: #67C23A;"></i>
+              <h3>分类历史</h3>
+              <p>查看历史分类记录，支持按类别、时间、来源等条件筛选</p>
+            </div>
+          </el-card>
+        </el-col>
 <!--        <el-col :xs="24" :sm="12" :md="12">-->
 <!--          <el-card shadow="hover" class="feature-card" @click.native="$router.push('/patent-search')">-->
 <!--            <div class="feature-content">-->

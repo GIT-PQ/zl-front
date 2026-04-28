@@ -15,6 +15,7 @@
           >
             <el-menu-item index="/">首页</el-menu-item>
             <el-menu-item index="/patent-classification">专利分类预测</el-menu-item>
+            <el-menu-item index="/classification-history">分类历史</el-menu-item>
 <!--            <el-menu-item index="/patent-search">专利检索</el-menu-item>-->
           </el-menu>
           <div class="user-info">

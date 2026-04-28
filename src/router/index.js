@@ -33,6 +33,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/classification-history',
+    name: 'classification-history',
+    component: () => import(/* webpackChunkName: "classification-history" */ '../views/ClassificationHistory.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/patent-search',
     name: 'patent-search',
     component: () => import(/* webpackChunkName: "patent-search" */ '../views/PatentSearch.vue'),

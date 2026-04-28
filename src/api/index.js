@@ -165,4 +165,13 @@ export const patentApi = {
   }
 }
 
+// 分类记录相关 API
+export const recordApi = {
+  // 获取分类历史列表
+  getList: (params) => api.get('/record/list', { params }),
+
+  // 获取单条记录详情
+  getDetail: (id) => api.get(`/record/${id}`)
+}
+
 export default api
