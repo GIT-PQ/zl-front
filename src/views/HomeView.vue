@@ -13,7 +13,7 @@
         <h2>欢迎使用{{ shortName }}</h2>
       </div>
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="12" :md="12">
+        <el-col :xs="24" :sm="12" :md="8">
           <el-card shadow="hover" class="feature-card" @click.native="$router.push('/patent-classification')">
             <div class="feature-content">
               <i class="el-icon-data-analysis" style="font-size: 48px; color: #409EFF;"></i>
@@ -22,7 +22,16 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12">
+        <el-col :xs="24" :sm="12" :md="8">
+          <el-card shadow="hover" class="feature-card" @click.native="$router.push('/batch-classification')">
+            <div class="feature-content">
+              <i class="el-icon-upload" style="font-size: 48px; color: #E6A23C;"></i>
+              <h3>批量分类</h3>
+              <p>上传Excel文件批量处理专利摘要，一键完成多条专利分类</p>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="8">
           <el-card shadow="hover" class="feature-card" @click.native="$router.push('/classification-history')">
             <div class="feature-content">
               <i class="el-icon-time" style="font-size: 48px; color: #67C23A;"></i>

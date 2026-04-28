@@ -39,6 +39,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/batch-classification',
+    name: 'batch-classification',
+    component: () => import(/* webpackChunkName: "batch-classification" */ '../views/BatchClassification.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/patent-search',
     name: 'patent-search',
     component: () => import(/* webpackChunkName: "patent-search" */ '../views/PatentSearch.vue'),

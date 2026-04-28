@@ -84,6 +84,40 @@ export const patentApi = {
   // 专利分类预测
   classify: (data) => api.post('/patent/classify', data),
 
+  // 上传文件预览
+  uploadPreview: (file) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return axios.post(
+      (process.env.VUE_APP_API_BASE_URL || 'http://localhost:8081/api') + '/patent/upload-preview',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    ).then(res => res.data)
+  },
+
+  // 批量分类
+  batchClassify: (file, summaryColumn) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('summaryColumn', summaryColumn)
+    return axios.post(
+      (process.env.VUE_APP_API_BASE_URL || 'http://localhost:8081/api') + '/patent/batch-classify',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+        timeout: 300000 // 5分钟超时，批量分类可能耗时较长
+      }
+    ).then(res => res.data)
+  },
+
   // 专利检索
   // 真实后端请求代码：
   // search: (params) => api.get('/patent/search', { params })

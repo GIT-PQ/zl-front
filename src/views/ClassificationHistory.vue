@@ -80,9 +80,9 @@
             {{ (scope.row.predProbability * 100).toFixed(2) }}%
           </template>
         </el-table-column>
-        <el-table-column prop="source" label="来源" width="100">
+        <el-table-column prop="source" label="来源" width="160">
           <template slot-scope="scope">
-            {{ scope.row.source === 'single' ? '单条输入' : '批量导入' }}
+            {{ formatSource(scope.row) }}
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="分类时间" width="160">
@@ -107,6 +107,12 @@
           </el-form-item>
           <el-form-item label="预测类别">
             {{ detailRecord.predLabel }} (置信度: {{ (detailRecord.predProbability * 100).toFixed(2) }}%)
+          </el-form-item>
+          <el-form-item label="来源类型">
+            {{ formatSource(detailRecord) }}
+          </el-form-item>
+          <el-form-item label="批次ID" v-if="detailRecord.source === 'batch'">
+            {{ detailRecord.batchId }}
           </el-form-item>
         </el-form>
         <div class="chart-section">
@@ -139,7 +145,8 @@ export default {
         startTime: '',
         endTime: '',
         source: '',
-        summary: ''
+        summary: '',
+        batchId: ''
       },
       records: [],
       loading: false,
@@ -150,6 +157,11 @@ export default {
     }
   },
   mounted () {
+    // 检查是否有batchId参数（从批量分类页面跳转）
+    if (this.$route.query.batchId) {
+      this.filters.batchId = this.$route.query.batchId
+      this.filters.source = 'batch'
+    }
     this.loadRecords()
   },
   methods: {
@@ -161,6 +173,7 @@ export default {
       if (this.filters.endTime) params.endTime = this.filters.endTime
       if (this.filters.source) params.source = this.filters.source
       if (this.filters.summary) params.summary = this.filters.summary
+      if (this.filters.batchId) params.batchId = this.filters.batchId
 
       recordApi.getList(params)
         .then(res => {
@@ -187,7 +200,8 @@ export default {
         startTime: '',
         endTime: '',
         source: '',
-        summary: ''
+        summary: '',
+        batchId: ''
       }
       this.loadRecords()
     },
@@ -208,6 +222,7 @@ export default {
       if (this.filters.endTime) params.endTime = this.filters.endTime
       if (this.filters.source) params.source = this.filters.source
       if (this.filters.summary) params.summary = this.filters.summary
+      if (this.filters.batchId) params.batchId = this.filters.batchId
 
       recordApi.export(params)
         .then(res => {
@@ -270,6 +285,15 @@ export default {
       const h = String(date.getHours()).padStart(2, '0')
       const min = String(date.getMinutes()).padStart(2, '0')
       return `${y}-${m}-${d} ${h}:${min}`
+    },
+    formatSource (row) {
+      if (row.source === 'single') {
+        return '单条输入'
+      } else if (row.source === 'batch' && row.batchId) {
+        return `批量(${row.batchId.substring(0, 8)}...)`
+      } else {
+        return '批量导入'
+      }
     },
     showDetail (row) {
       this.detailRecord = row
