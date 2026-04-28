@@ -112,9 +112,9 @@
           <h4>概率分布</h4>
           <ChartVisualization
             ref="detailChart"
-            v-if="detailCategories.length > 0"
             :categories="detailCategories"
             height="400px"
+            :style="{ display: detailCategories.length > 0 ? 'block' : 'none' }"
           />
         </div>
       </div>
@@ -229,6 +229,12 @@ export default {
       this.$nextTick(() => {
         if (this.$refs.detailChart) {
           this.$refs.detailChart.renderChart()
+          // 弹窗打开后容器尺寸变化，需要 resize
+          setTimeout(() => {
+            if (this.$refs.detailChart) {
+              this.$refs.detailChart.resize()
+            }
+          }, 100)
         }
       })
     }

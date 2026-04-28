@@ -68,7 +68,24 @@ export default {
       }
     },
     renderChart () {
-      if (!this.chart || !this.categories || this.categories.length === 0) return
+      if (!this.categories || this.categories.length === 0) return
+
+      // 如果 chart 未初始化，先初始化
+      if (!this.chart) {
+        this.$nextTick(() => {
+          if (this.$refs.chart) {
+            this.chart = echarts.init(this.$refs.chart)
+            window.addEventListener('resize', this.handleResize)
+            this.doRenderChart()
+          }
+        })
+        return
+      }
+
+      this.doRenderChart()
+    },
+    doRenderChart () {
+      if (!this.chart) return
 
       const sortedCategories = [...this.categories]
         .sort((a, b) => b.probability - a.probability)
@@ -174,6 +191,11 @@ export default {
     clear () {
       if (this.chart) {
         this.chart.clear()
+      }
+    },
+    resize () {
+      if (this.chart) {
+        this.chart.resize()
       }
     }
   }
