@@ -62,6 +62,7 @@
         <el-form-item>
           <el-button type="primary" @click="handleQuery">查询</el-button>
           <el-button @click="handleReset">重置</el-button>
+          <el-button type="success" :loading="exportLoading" @click="handleExport">导出Excel</el-button>
         </el-form-item>
       </el-form>
 
@@ -142,6 +143,7 @@ export default {
       },
       records: [],
       loading: false,
+      exportLoading: false,
       detailVisible: false,
       detailRecord: null,
       detailCategories: []
@@ -188,6 +190,60 @@ export default {
         summary: ''
       }
       this.loadRecords()
+    },
+    handleExport () {
+      this.$confirm('确定导出当前筛选结果？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.doExport()
+      }).catch(() => {})
+    },
+    doExport () {
+      this.exportLoading = true
+      const params = {}
+      if (this.filters.predLabel) params.predLabel = this.filters.predLabel
+      if (this.filters.startTime) params.startTime = this.filters.startTime
+      if (this.filters.endTime) params.endTime = this.filters.endTime
+      if (this.filters.source) params.source = this.filters.source
+      if (this.filters.summary) params.summary = this.filters.summary
+
+      recordApi.export(params)
+        .then(res => {
+          if (res.data.type === 'application/json') {
+            // count > 200 或无数据，返回 JSON 错误
+            const reader = new FileReader()
+            reader.onload = () => {
+              try {
+                const json = JSON.parse(reader.result)
+                this.$message.warning(json.message || '导出失败')
+              } catch (e) {
+                this.$message.error('导出失败')
+              }
+            }
+            reader.readAsText(res.data)
+          } else {
+            // 正常 Excel 流
+            const blob = new Blob([res.data])
+            const url = window.URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            const now = new Date()
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`
+            link.download = `分类记录_${dateStr}.xlsx`
+            link.click()
+            window.URL.revokeObjectURL(url)
+            this.$message.success('导出成功')
+          }
+        })
+        .catch(err => {
+          console.error(err)
+          this.$message.error('导出失败')
+        })
+        .finally(() => {
+          this.exportLoading = false
+        })
     },
     highlightKeyword (text) {
       if (!text) return ''

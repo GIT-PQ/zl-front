@@ -171,7 +171,19 @@ export const recordApi = {
   getList: (params) => api.get('/record/list', { params }),
 
   // 获取单条记录详情
-  getDetail: (id) => api.get(`/record/${id}`)
+  getDetail: (id) => api.get(`/record/${id}`),
+
+  // 导出分类记录为 Excel
+  export: (params) => axios.get(
+    (process.env.VUE_APP_API_BASE_URL || 'http://localhost:8081/api') + '/record/export',
+    {
+      params,
+      responseType: 'blob',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  )
 }
 
 export default api
