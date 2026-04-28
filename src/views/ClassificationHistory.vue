@@ -59,6 +59,9 @@
         <el-form-item label="摘要关键字">
           <el-input v-model="filters.summary" placeholder="输入关键词" style="width: 200px;" clearable />
         </el-form-item>
+        <el-form-item label="批次ID">
+          <el-input v-model="filters.batchId" placeholder="输入批次ID" style="width: 280px;" clearable />
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">查询</el-button>
           <el-button @click="handleReset">重置</el-button>
@@ -83,6 +86,11 @@
         <el-table-column prop="source" label="来源" width="160">
           <template slot-scope="scope">
             {{ formatSource(scope.row) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="batchId" label="批次ID" width="280">
+          <template slot-scope="scope">
+            {{ scope.row.batchId || '-' }}
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="分类时间" width="160">
@@ -287,13 +295,7 @@ export default {
       return `${y}-${m}-${d} ${h}:${min}`
     },
     formatSource (row) {
-      if (row.source === 'single') {
-        return '单条输入'
-      } else if (row.source === 'batch' && row.batchId) {
-        return `批量(${row.batchId.substring(0, 8)}...)`
-      } else {
-        return '批量导入'
-      }
+      return row.source === 'single' ? '单条输入' : '批量导入'
     },
     showDetail (row) {
       this.detailRecord = row
